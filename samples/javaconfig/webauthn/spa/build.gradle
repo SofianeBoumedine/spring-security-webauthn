@@ -26,6 +26,7 @@ dependencies {
     compile project(':spring-security-webauthn-core')
     compile project(':spring-security-webauthn-thymeleaf')
     compile project(':spring-security-webauthn-samples/javaconfig/webauthn/lib/spa-angular-client')
+    compile project(":spring-security-webauthn-samples/javaconfig/webauthn/lib/spa-react-client")
 
 
     // Spring Framework

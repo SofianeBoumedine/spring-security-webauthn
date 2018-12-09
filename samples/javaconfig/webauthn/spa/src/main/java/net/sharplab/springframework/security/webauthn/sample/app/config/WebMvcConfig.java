@@ -25,6 +25,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         return location.exists() && location.isReadable() ? location : null;
                     }
                 });
+
+        registry.addResourceHandler("/react/**", "/react/",  "/react")
+                .addResourceLocations("classpath:/static/react/index.html")
+                .resourceChain(true)
+                // Override PathResourceResolver to serve a specific file to Angular urls.
+                .addResolver(new PathResourceResolver() {
+                    @Override
+                    protected Resource getResource(String resourcePath, Resource location) {
+                        return location.exists() && location.isReadable() ? location : null;
+                    }
+                });
+
     }
 
 }

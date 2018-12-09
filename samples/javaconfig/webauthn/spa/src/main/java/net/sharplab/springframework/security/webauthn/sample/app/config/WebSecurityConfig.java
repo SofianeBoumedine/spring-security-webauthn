@@ -81,7 +81,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/static/**",
                 "/webjars/**",
                 "/angular",
-                "/angular/**");
+                "/angular/**",
+                "/react",
+                "/react/**"
+        );
     }
 
     /**
