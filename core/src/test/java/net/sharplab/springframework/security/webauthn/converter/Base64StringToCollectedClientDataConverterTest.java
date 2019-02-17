@@ -16,8 +16,8 @@
 
 package net.sharplab.springframework.security.webauthn.converter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.CollectedClientDataConverter;
-import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.client.ClientDataType;
 import com.webauthn4j.response.client.CollectedClientData;
 import com.webauthn4j.test.TestUtil;
@@ -27,14 +27,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Base64StringToCollectedClientDataConverterTest {
 
-    private Registry registry = new Registry();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     public void convert_test() {
         CollectedClientData expected = TestUtil.createClientData(ClientDataType.GET);
-        String source = new CollectedClientDataConverter(registry).convertToBase64UrlString(expected);
+        String source = new CollectedClientDataConverter(objectMapper).convertToBase64UrlString(expected);
 
-        CollectedClientData result = new Base64StringToCollectedClientDataConverter(registry).convert(source);
+        CollectedClientData result = new Base64StringToCollectedClientDataConverter(objectMapper).convert(source);
 
         assertThat(result).isEqualTo(expected);
     }

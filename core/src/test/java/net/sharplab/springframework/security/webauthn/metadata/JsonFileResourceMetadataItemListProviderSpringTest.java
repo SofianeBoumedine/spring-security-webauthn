@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.metadata;
 
-import com.webauthn4j.registry.Registry;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +35,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 public class JsonFileResourceMetadataItemListProviderSpringTest {
 
+
     @Autowired
     private JsonFileResourceMetadataItemListProvider target;
 
     @Configuration
     public static class Config{
 
+        private ObjectMapper objectMapper = new ObjectMapper();
+
         @Bean
         public JsonFileResourceMetadataItemListProvider jsonFileResourceMetadataItemListProvider(ResourceLoader resourceLoader) throws IOException {
-            JsonFileResourceMetadataItemListProvider provider = new JsonFileResourceMetadataItemListProvider(new Registry());
+            JsonFileResourceMetadataItemListProvider provider = new JsonFileResourceMetadataItemListProvider(objectMapper);
             Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadataStatements/fido-conformance-tools/*.json");
             provider.setResources(Arrays.asList(resources));
             return provider;

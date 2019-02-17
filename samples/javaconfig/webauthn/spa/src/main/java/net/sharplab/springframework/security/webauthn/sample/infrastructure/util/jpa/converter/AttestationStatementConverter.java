@@ -18,7 +18,6 @@ package net.sharplab.springframework.security.webauthn.sample.infrastructure.uti
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.attestation.statement.AttestationStatement;
 
 import javax.persistence.AttributeConverter;
@@ -30,7 +29,7 @@ import java.io.UncheckedIOException;
  */
 public class AttestationStatementConverter implements AttributeConverter<AttestationStatement, String> {
 
-    private ObjectMapper jsonMapper = new Registry().getJsonMapper();
+    private ObjectMapper jsonMapper = new ObjectMapper();
 
     @Override
     public String convertToDatabaseColumn(AttestationStatement attribute) {

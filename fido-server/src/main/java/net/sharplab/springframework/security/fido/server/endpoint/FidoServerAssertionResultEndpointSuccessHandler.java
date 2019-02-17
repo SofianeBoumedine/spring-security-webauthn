@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.webauthn4j.registry.Registry;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -28,12 +28,12 @@ public class FidoServerAssertionResultEndpointSuccessHandler implements Authenti
 
     private ServerEndpointFilterUtil serverEndpointFilterUtil;
 
-    public FidoServerAssertionResultEndpointSuccessHandler(Registry registry) {
-        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(registry);
+    public FidoServerAssertionResultEndpointSuccessHandler(ObjectMapper objectMapper) {
+        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(objectMapper);
     }
 
     public FidoServerAssertionResultEndpointSuccessHandler() {
-        this(new Registry());
+        this(new ObjectMapper());
     }
 
     @Override

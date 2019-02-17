@@ -16,8 +16,8 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.registry.Registry;
 import com.webauthn4j.request.extension.client.AuthenticationExtensionsClientInputs;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import com.webauthn4j.util.Base64UrlUtil;
@@ -48,8 +48,8 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
 
     private OptionsProvider optionsProvider;
 
-    public FidoServerAssertionOptionsEndpointFilter(Registry registry, OptionsProvider optionsProvider) {
-        super(FILTER_URL, registry);
+    public FidoServerAssertionOptionsEndpointFilter(ObjectMapper objectMapper, OptionsProvider optionsProvider) {
+        super(FILTER_URL, objectMapper);
         this.optionsProvider = optionsProvider;
         checkConfig();
     }
@@ -75,7 +75,7 @@ public class FidoServerAssertionOptionsEndpointFilter extends ServerEndpointFilt
             throw new UncheckedIOException(e);
         }
         ServerPublicKeyCredentialGetOptionsRequest serverRequest =
-                new JsonConverter(registry.getJsonMapper()).readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
+                new JsonConverter(objectMapper).readValue(inputStream, ServerPublicKeyCredentialGetOptionsRequest.class);
         String username = serverRequest.getUsername();
         AssertionOptions options = optionsProvider.getAssertionOptions(request, username, new DefaultChallenge());
         List<ServerPublicKeyCredentialDescriptor> credentials = options.getCredentials().stream().map(ServerPublicKeyCredentialDescriptor::new).collect(Collectors.toList());

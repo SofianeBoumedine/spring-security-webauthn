@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.config.configurers;
 
-import com.webauthn4j.registry.Registry;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sharplab.springframework.security.webauthn.WebAuthnRegistrationRequestValidator;
 import net.sharplab.springframework.security.webauthn.challenge.ChallengeRepository;
 import net.sharplab.springframework.security.webauthn.challenge.HttpSessionChallengeRepository;
@@ -58,16 +58,16 @@ public class WebAuthnConfigurerUtil {
         return optionsProvider;
     }
 
-    public static <H extends HttpSecurityBuilder<H>> Registry getRegistry(H http) {
+    public static <H extends HttpSecurityBuilder<H>> ObjectMapper getObjectMapper(H http) {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        Registry registry;
-        String[] beanNames = applicationContext.getBeanNamesForType(Registry.class);
+        ObjectMapper objectMapper;
+        String[] beanNames = applicationContext.getBeanNamesForType(ObjectMapper.class);
         if (beanNames.length == 0) {
-            registry = new Registry();
+            objectMapper = new ObjectMapper();
         } else {
-            registry = applicationContext.getBean(Registry.class);
+            objectMapper = applicationContext.getBean(ObjectMapper.class);
         }
-        return registry;
+        return objectMapper;
     }
 
     public static <H extends HttpSecurityBuilder<H>> ServerPropertyProvider getServerPropertyProvider(H http) {
@@ -91,5 +91,4 @@ public class WebAuthnConfigurerUtil {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
         return applicationContext.getBean(WebAuthnRegistrationRequestValidator.class);
     }
-
 }

@@ -17,8 +17,8 @@
 package net.sharplab.springframework.security.fido.server.endpoint;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.registry.Registry;
 import com.webauthn4j.server.ServerProperty;
 import com.webauthn4j.util.Base64UrlUtil;
 import net.sharplab.springframework.security.fido.server.validator.ServerPublicKeyCredentialValidator;
@@ -52,26 +52,26 @@ public class FidoServerAssertionResultEndpointFilter extends AbstractAuthenticat
              = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse>>() {};
 
     public FidoServerAssertionResultEndpointFilter(
-            Registry registry,
+            ObjectMapper objectMapper,
             ServerPropertyProvider serverPropertyProvider,
             RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
 
-        this.jsonConverter = new JsonConverter(registry.getJsonMapper());
+        this.jsonConverter = new JsonConverter(objectMapper);
         this.serverPropertyProvider = serverPropertyProvider;
         this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator<>();
 
-        this.setAuthenticationSuccessHandler(new FidoServerAssertionResultEndpointSuccessHandler(registry));
-        this.setAuthenticationFailureHandler(new FidoServerAssertionResultEndpointFailureHandler(registry));
+        this.setAuthenticationSuccessHandler(new FidoServerAssertionResultEndpointSuccessHandler(objectMapper));
+        this.setAuthenticationFailureHandler(new FidoServerAssertionResultEndpointFailureHandler(objectMapper));
         checkConfig();
     }
 
-    public FidoServerAssertionResultEndpointFilter(Registry registry, ServerPropertyProvider serverPropertyProvider, String defaultFilterProcessesUrl) {
-        this(registry, serverPropertyProvider, new AntPathRequestMatcher(defaultFilterProcessesUrl, HttpMethod.POST.name()));
+    public FidoServerAssertionResultEndpointFilter(ObjectMapper objectMapper, ServerPropertyProvider serverPropertyProvider, String defaultFilterProcessesUrl) {
+        this(objectMapper, serverPropertyProvider, new AntPathRequestMatcher(defaultFilterProcessesUrl, HttpMethod.POST.name()));
     }
 
-    public FidoServerAssertionResultEndpointFilter(Registry registry, ServerPropertyProvider serverPropertyProvider) {
-        this(registry, serverPropertyProvider, new AntPathRequestMatcher(FILTER_URL, HttpMethod.POST.name()));
+    public FidoServerAssertionResultEndpointFilter(ObjectMapper objectMapper, ServerPropertyProvider serverPropertyProvider) {
+        this(objectMapper, serverPropertyProvider, new AntPathRequestMatcher(FILTER_URL, HttpMethod.POST.name()));
     }
 
     @Override

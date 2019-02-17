@@ -16,9 +16,9 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
-import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -32,9 +32,9 @@ class ServerEndpointFilterUtil {
     private JsonConverter jsonConverter;
     private CborConverter cborConverter;
 
-    ServerEndpointFilterUtil(Registry registry) {
-        this.jsonConverter = new JsonConverter(registry.getJsonMapper());
-        this.cborConverter = new CborConverter(registry.getCborMapper());
+    ServerEndpointFilterUtil(ObjectMapper objectMapper) {
+        this.jsonConverter = new JsonConverter(objectMapper);
+        this.cborConverter = new CborConverter(objectMapper);
     }
 
     void writeResponse(HttpServletResponse httpServletResponse, ServerResponse response) throws IOException {

@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.webauthn.metadata;
 
-import com.webauthn4j.extras.fido.metadata.HttpClient;
+import com.webauthn4j.metadata.HttpClient;
 import org.springframework.web.client.RestTemplate;
 
 /**

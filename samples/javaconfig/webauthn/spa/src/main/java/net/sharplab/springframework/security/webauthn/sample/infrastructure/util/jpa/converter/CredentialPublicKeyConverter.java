@@ -18,7 +18,6 @@ package net.sharplab.springframework.security.webauthn.sample.infrastructure.uti
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webauthn4j.registry.Registry;
 import com.webauthn4j.response.attestation.authenticator.CredentialPublicKey;
 
 import javax.persistence.AttributeConverter;
@@ -29,7 +28,7 @@ import java.io.UncheckedIOException;
 @Converter
 public class CredentialPublicKeyConverter implements AttributeConverter<CredentialPublicKey, String> {
 
-    private ObjectMapper jsonMapper = new Registry().getJsonMapper();
+    private ObjectMapper jsonMapper = new ObjectMapper();
 
     @Override
     public String convertToDatabaseColumn(CredentialPublicKey attribute) {
