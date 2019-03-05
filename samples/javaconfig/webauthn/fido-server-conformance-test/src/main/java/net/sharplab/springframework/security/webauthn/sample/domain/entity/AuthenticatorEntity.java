@@ -17,11 +17,13 @@
 package net.sharplab.springframework.security.webauthn.sample.domain.entity;
 
 import com.webauthn4j.authenticator.Authenticator;
+import com.webauthn4j.request.AuthenticatorTransport;
 import com.webauthn4j.response.attestation.authenticator.AttestedCredentialData;
 import com.webauthn4j.response.attestation.statement.AttestationStatement;
 import net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter.AttestationStatementConverter;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Authenticator model
@@ -40,6 +42,8 @@ public class AuthenticatorEntity implements Authenticator {
     private UserEntity user;
 
     private long counter;
+
+    private List<AuthenticatorTransport> authenticatorTransports;
 
     @Embedded
     private AttestedCredentialData attestedCredentialData;
@@ -83,6 +87,15 @@ public class AuthenticatorEntity implements Authenticator {
 
     public void setCounter(long counter) {
         this.counter = counter;
+    }
+
+    @Override
+    public List<AuthenticatorTransport> getAuthenticatorTransports() {
+        return authenticatorTransports;
+    }
+
+    public void setAuthenticatorTransports(List<AuthenticatorTransport> authenticatorTransports){
+        this.authenticatorTransports = authenticatorTransports;
     }
 
     public AttestedCredentialData getAttestedCredentialData() {
