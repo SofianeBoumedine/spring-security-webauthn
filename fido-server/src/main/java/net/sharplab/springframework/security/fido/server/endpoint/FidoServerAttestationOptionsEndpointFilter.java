@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.response.client.challenge.Challenge;
 import com.webauthn4j.response.client.challenge.DefaultChallenge;
@@ -50,8 +49,8 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
 
     private OptionsProvider optionsProvider;
 
-    public FidoServerAttestationOptionsEndpointFilter(ObjectMapper objectMapper, OptionsProvider optionsProvider) {
-        super(FILTER_URL, objectMapper);
+    public FidoServerAttestationOptionsEndpointFilter(JsonConverter jsonConverter, OptionsProvider optionsProvider) {
+        super(FILTER_URL, jsonConverter);
         this.optionsProvider = optionsProvider;
         checkConfig();
     }
@@ -75,7 +74,7 @@ public class FidoServerAttestationOptionsEndpointFilter extends ServerEndpointFi
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        ServerPublicKeyCredentialCreationOptionsRequest serverRequest = new JsonConverter(objectMapper)
+        ServerPublicKeyCredentialCreationOptionsRequest serverRequest = jsonConverter
                 .readValue(inputStream, ServerPublicKeyCredentialCreationOptionsRequest.class);
         String username = serverRequest.getUsername();
         String displayName = serverRequest.getDisplayName();

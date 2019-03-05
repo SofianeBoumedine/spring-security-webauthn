@@ -39,8 +39,8 @@ public class JsonFileResourceMetadataItemListProvider implements MetadataItemsPr
     private List<Resource> resources;
     private Map<AAGUID, Set<MetadataItem>> cachedMetadataItems;
 
-    public JsonFileResourceMetadataItemListProvider(ObjectMapper objectMapper) {
-        this.jsonConverter = new JsonConverter(objectMapper);
+    public JsonFileResourceMetadataItemListProvider(JsonConverter jsonConverter) {
+        this.jsonConverter = jsonConverter;
     }
 
     @Override

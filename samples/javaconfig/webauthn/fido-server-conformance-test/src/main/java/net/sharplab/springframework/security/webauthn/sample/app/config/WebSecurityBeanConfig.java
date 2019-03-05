@@ -18,8 +18,9 @@ package net.sharplab.springframework.security.webauthn.sample.app.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.webauthn4j.converter.util.CborConverter;
+import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.metadata.*;
-import com.webauthn4j.metadata.data.FidoMdsMetadataItem;
 import com.webauthn4j.metadata.data.MetadataItem;
 import com.webauthn4j.util.Base64Util;
 import com.webauthn4j.util.CertificateUtil;
@@ -141,8 +142,8 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(ObjectMapper objectMapper) {
-        return new WebAuthnAuthenticationContextValidator(objectMapper);
+    public WebAuthnAuthenticationContextValidator webAuthnAuthenticationContextValidator(JsonConverter jsonConverter, CborConverter cborConverter) {
+        return new WebAuthnAuthenticationContextValidator(jsonConverter, cborConverter);
     }
 
     @Bean
@@ -151,7 +152,7 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public MetadataItemsProvider<MetadataItem> metadataItemListProvider(ObjectMapper objectMapper, HttpClient httpClient, ResourceLoader resourceLoader) throws IOException {
+    public MetadataItemsProvider<MetadataItem> metadataItemListProvider(JsonConverter jsonConverter, HttpClient httpClient, ResourceLoader resourceLoader) throws IOException {
         String[] urls = new String[]{
                 "https://fidoalliance.co.nz/mds/execute/26f215541c4ec9b5f02dccbd5256adc636bfd8697b1e352497cd0992c2e6ed07",
                 "https://fidoalliance.co.nz/mds/execute/64fb580564284282ee31053135a9cf793b2c02cf0910bb061f2f5841e78d9c05",
@@ -162,13 +163,13 @@ public class WebSecurityBeanConfig {
         X509Certificate conformanceTestCertificate = CertificateUtil.generateX509Certificate(Base64Util.decode("MIICYjCCAeigAwIBAgIPBIdvCXPXJiuD7VW0mgRQMAoGCCqGSM49BAMDMGcxCzAJBgNVBAYTAlVTMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMScwJQYDVQQLDB5GQUtFIE1ldGFkYXRhIFRPQyBTaWduaW5nIEZBS0UxFzAVBgNVBAMMDkZBS0UgUm9vdCBGQUtFMB4XDTE3MDIwMTAwMDAwMFoXDTQ1MDEzMTIzNTk1OVowZzELMAkGA1UEBhMCVVMxFjAUBgNVBAoMDUZJRE8gQWxsaWFuY2UxJzAlBgNVBAsMHkZBS0UgTWV0YWRhdGEgVE9DIFNpZ25pbmcgRkFLRTEXMBUGA1UEAwwORkFLRSBSb290IEZBS0UwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAARcVLd6r4fnNHzs5K2zfbg//4X9/oBqmsdRVtZ9iXhlgM9vFYaKviYtqmwkq0D3Lihg3qefeZgXXYi4dFgvzU7ZLBapSNM3CT8RDBe/MBJqsPwaRQbIsGmmItmt/ESNQD6jWjBYMAsGA1UdDwQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MBsGA1UdDgQU3feayBzv4V/ToevbM18w9GoZmVkwGwYDVR0jBBTd95rIHO/hX9Oh69szXzD0ahmZWTAKBggqhkjOPQQDAwNoADBlAjAfT9m8LabIuGS6tXiJmRB91SjJ49dk+sPsn+AKx1/PS3wbHEGnGxDIIcQplYDFcXICMQDi33M/oUlb7RDAmapRBjJxKK+oh7hlSZv4djmZV3YV0JnF1Ed5E4I0f3C04eP0bjw="));
         List<MetadataItemsProvider<MetadataItem>> list = new ArrayList<>();
 
-        JsonFileResourceMetadataItemListProvider provider = new JsonFileResourceMetadataItemListProvider(objectMapper);
+        JsonFileResourceMetadataItemListProvider provider = new JsonFileResourceMetadataItemListProvider(jsonConverter);
         Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:metadataStatements/fido-conformance-tools/*.json");
         provider.setResources(Arrays.asList(resources));
         list.add(provider);
 
         Arrays.stream(urls).map(url -> {
-            FidoMdsMetadataItemsProvider metadataItemsProvider = new FidoMdsMetadataItemsProvider(objectMapper, httpClient, conformanceTestCertificate);
+            FidoMdsMetadataItemsProvider metadataItemsProvider = new FidoMdsMetadataItemsProvider(jsonConverter, httpClient, conformanceTestCertificate);
             metadataItemsProvider.setFidoMetadataServiceEndpoint(url);
             return (MetadataItemsProvider)metadataItemsProvider;
         }).forEach(list::add);
@@ -202,10 +203,13 @@ public class WebSecurityBeanConfig {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerSubtypes(new NamedType(ExampleExtensionClientInput.class, ExampleExtensionClientInput.ID));
-        return objectMapper;
+    public JsonConverter jsonConverter() {
+        return new JsonConverter();
+    }
+
+    @Bean
+    public CborConverter cborConverter(JsonConverter jsonConverter){
+        return jsonConverter.getCborConverter();
     }
 
     @Bean

@@ -64,9 +64,9 @@ public class OptionsEndpointFilter extends GenericFilterBean {
 
     private OptionsProvider optionsProvider;
 
-    public OptionsEndpointFilter(OptionsProvider optionsProvider, ObjectMapper objectMapper) {
+    public OptionsEndpointFilter(OptionsProvider optionsProvider, JsonConverter jsonConverter) {
         this.optionsProvider = optionsProvider;
-        this.jsonConverter = new JsonConverter(objectMapper);
+        this.jsonConverter = jsonConverter;
         this.trustResolver = new AuthenticationTrustResolverImpl();
         this.mfaTokenEvaluator = new MFATokenEvaluatorImpl();
         checkConfig();

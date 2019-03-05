@@ -53,12 +53,12 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
                 = new TypeReference<ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse>>() {};
 
     public FidoServerAttestationResultEndpointFilter(
-            ObjectMapper objectMapper,
+            JsonConverter jsonConverter,
             WebAuthnUserDetailsService webAuthnUserDetailsService,
             WebAuthnRegistrationRequestValidator webAuthnRegistrationRequestValidator) {
-        super(FILTER_URL, objectMapper);
-        this.attestationObjectConverter = new AttestationObjectConverter(objectMapper);
-        this.collectedClientDataConverter = new CollectedClientDataConverter(objectMapper);
+        super(FILTER_URL, jsonConverter);
+        this.attestationObjectConverter = new AttestationObjectConverter(jsonConverter.getCborConverter());
+        this.collectedClientDataConverter = new CollectedClientDataConverter(jsonConverter);
         this.serverPublicKeyCredentialValidator = new ServerPublicKeyCredentialValidator<>();
 
         this.webAuthnUserDetailsService = webAuthnUserDetailsService;
@@ -88,7 +88,7 @@ public class FidoServerAttestationResultEndpointFilter extends ServerEndpointFil
             throw new UncheckedIOException(e);
         }
         ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> credential =
-                new JsonConverter(objectMapper).readValue(inputStream, credentialTypeRef);
+                this.jsonConverter.readValue(inputStream, credentialTypeRef);
         serverPublicKeyCredentialValidator.validate(credential);
         ServerAuthenticatorAttestationResponse response = credential.getResponse();
         CollectedClientData collectedClientData = collectedClientDataConverter.convert(response.getClientDataJSON());

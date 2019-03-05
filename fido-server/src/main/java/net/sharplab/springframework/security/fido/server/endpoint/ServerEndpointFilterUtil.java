@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.CborConverter;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.response.client.challenge.Challenge;
@@ -32,9 +31,9 @@ class ServerEndpointFilterUtil {
     private JsonConverter jsonConverter;
     private CborConverter cborConverter;
 
-    ServerEndpointFilterUtil(ObjectMapper objectMapper) {
-        this.jsonConverter = new JsonConverter(objectMapper);
-        this.cborConverter = new CborConverter(objectMapper);
+    ServerEndpointFilterUtil(JsonConverter jsonConverter) {
+        this.jsonConverter = jsonConverter;
+        this.cborConverter = jsonConverter.getCborConverter();
     }
 
     void writeResponse(HttpServletResponse httpServletResponse, ServerResponse response) throws IOException {

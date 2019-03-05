@@ -16,7 +16,6 @@
 
 package net.sharplab.springframework.security.webauthn.sample.infrastructure.util.jpa.converter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webauthn4j.converter.util.JsonConverter;
 import com.webauthn4j.response.attestation.statement.AttestationStatement;
 
@@ -27,7 +26,7 @@ import javax.persistence.AttributeConverter;
  */
 public class AttestationStatementConverter implements AttributeConverter<AttestationStatement, String> {
 
-    private JsonConverter jsonConverter = new JsonConverter(new ObjectMapper()); //TODO
+    private JsonConverter jsonConverter = new JsonConverter(); //TODO
 
     @Override
     public String convertToDatabaseColumn(AttestationStatement attribute) {

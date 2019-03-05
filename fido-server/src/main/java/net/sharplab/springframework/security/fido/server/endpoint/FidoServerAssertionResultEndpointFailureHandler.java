@@ -16,7 +16,7 @@
 
 package net.sharplab.springframework.security.fido.server.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webauthn4j.converter.util.JsonConverter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -28,12 +28,12 @@ public class FidoServerAssertionResultEndpointFailureHandler implements Authenti
 
     private ServerEndpointFilterUtil serverEndpointFilterUtil;
 
-    public FidoServerAssertionResultEndpointFailureHandler(ObjectMapper objectMapper) {
-        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(objectMapper);
+    public FidoServerAssertionResultEndpointFailureHandler(JsonConverter jsonConverter) {
+        this.serverEndpointFilterUtil = new ServerEndpointFilterUtil(jsonConverter);
     }
 
     public FidoServerAssertionResultEndpointFailureHandler() {
-        this(new ObjectMapper());
+        this(new JsonConverter());
     }
 
     @Override
